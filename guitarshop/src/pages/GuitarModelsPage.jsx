@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 import styles from "../style/ModelsPage.module.css";
 import butterfly from "../assets/butterfly1.png";
 import logos from "../assets/logos1.png";
@@ -27,6 +29,7 @@ export const FIND_UNIQUE_BRAND = gql`
 
 export default function GuitarModelsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { brandId } = useParams();
   const [searchText, setSearchText] = useState("");
   const [sortOrder, setSortOrder] = useState("default");
@@ -58,43 +61,32 @@ export default function GuitarModelsPage() {
 
   return (
     <div className={styles.brandsPage}>
+      {/* Language Switcher and Back Button */}
+      <div className={styles.languageSwitcherContainer}>
+        <LanguageSwitcher />
+        <button
+          className={styles.backButton}
+          onClick={() => navigate("/")}
+        >
+          ⬅ {t('back_to_brands')}
+        </button>
+      </div>
+      
+      <div className={styles.header}>
+        <div className={styles.logoSection}>
+          <img src={butterfly} alt="VibeStrings Logo" className={styles.logoIcon} />
+          <span className={styles.logoText}>VibeStrings</span>
+        </div>
+      </div>
+      
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1
-            style={{
-              cursor: "pointer",
-              marginTop: "-30px",
-              marginBottom: "70px",
-              fontSize: "14px",
-              fontWeight: "100",
-            }}
-            onClick={() => navigate("/")}
-          >
-            ⬅ Back To Brands
-          </h1>
-          <h1
-            style={{
-              fontWeight: "200",
-              marginBottom: "75px",
-              fontSize: "20px",
-              marginTop: "-90px",
-            }}
-            className={styles.butterfly}
-          >
-            <img
-              src={butterfly}
-              style={{
-                marginTop: "20px",
-                marginBottom: "-12px",
-                marginRight: "-4px",
-                height: "45px",
-              }}
-              alt="Butterfly"
-            />
-            VibeStrings
-          </h1>
+          <div className={styles.logoSection}>
+            <img src={butterfly} alt="VibeStrings Logo" className={styles.logoIcon} />
+            <span className={styles.logoText}>VibeStrings</span>
+          </div>
           <h1 className={styles.heroTitle}>
-            Play like a <span className={styles.highlight}>Rock star</span>
+            <Trans i18nKey="play_like_rockstar" components={{ 1: <span className={styles.highlight} /> }} />
           </h1>
           <p className={styles.heroSubtitle}>
             With a legacy dating back to the 1950s, {brand.name} blends expert
@@ -103,19 +95,19 @@ export default function GuitarModelsPage() {
           </p>
         </div>
         <div className={styles.heroImage}>
-          <img src={linear} style={{ width: "600px" }} alt="Hero guitar" />
+          <img src={linear} alt="Hero guitar" className={styles.heroImg} />
         </div>
       </div>
 
       <div className={styles.brandsSection}>
         <h2 className={styles.sectionTitle}>
-          Check out the <span className={styles.highlight}>selection</span>
+          <Trans i18nKey="section_title" components={{ 1: <span className={styles.highlight} /> }} />
         </h2>
 
         <div className={styles.controlsContainer}>
           <input
             type="text"
-            placeholder="🔎︎ Search by name"
+            placeholder={t('search_placeholder')}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             className={styles.searchBar}
@@ -125,9 +117,9 @@ export default function GuitarModelsPage() {
             onChange={(e) => setSortOrder(e.target.value)}
             className={styles.sortDropdown}
           >
-            <option value="default">Sort by Price</option>
-            <option value="price-asc">Low to High</option>
-            <option value="price-desc">High to Low</option>
+            <option value="default">{t('sort_by')} {t('sort_default')}</option>
+            <option value="price-asc">{t('sort_price_low')}</option>
+            <option value="price-desc">{t('sort_price_high')}</option>
           </select>
         </div>
 

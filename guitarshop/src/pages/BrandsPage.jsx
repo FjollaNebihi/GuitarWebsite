@@ -2,6 +2,8 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { FIND_ALL_BRANDS } from "../queries";
 import { useNavigate } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 import styles from "../style/BrandsPage.module.css";
 import myImage from '../assets/guitar1.jpg';
 import screenG1 from '../assets/screenG1.png';
@@ -14,97 +16,94 @@ import b2 from "../assets/b2.png";
 
 export default function BrandsPage() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { loading, error, data } = useQuery(FIND_ALL_BRANDS);
 
   if (loading) return <p>Loading brands...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className={styles.brandsPage}>
+    <div className={styles.brandsPage} key={i18n.language}>
+      {/* Language Switcher */}
+      <div className={styles.languageSwitcherContainer}>
+        <LanguageSwitcher />
+      </div>
+      
       <div className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 style={{fontWeight:'200' ,marginBottom:'75px', fontSize:'20px ',marginTop:'-90px'}}className={styles.butterfly}> <img src={butterfly} style={{marginTop:'20px', marginBottom:'-12px', marginRight:'-4px' , height:'45px'}}></img> VibeStrings</h1>
+          <div className={styles.logoSection}>
+            <img src={butterfly} alt="VibeStrings Logo" className={styles.logoIcon} />
+            <span className={styles.logoText}>VibeStrings</span>
+          </div>
           <h1 className={styles.heroTitle}>
-            Browse top quality <br />
-            <span className={styles.highlight}>Guitars</span> online
+            <Trans i18nKey="hero_title" components={{ 1: <span className={styles.highlight} /> }} />
           </h1>
           <p className={styles.heroSubtitle}>
-            Explore 50k+ latest collections of branded guitars online with VibeStrings.
+            {t('hero_subtitle')}
           </p>
         </div>
         <div className={styles.heroImage}>
-          <img src={myImage} style={{ width: '100%', height: '100%', objectFit: 'cover', borderBottomLeftRadius: '360px', borderBottomRightRadius: '151px', marginLeft:'70px', marginRight:'-60px'}}></img>
+          <img src={myImage} alt="Premium guitar collection" className={styles.heroImg} />
         </div>
       </div>
       
      
       <div className={styles.brandsSection}>
         <h2 className={styles.sectionTitle}>
-          Featuring the <span className={styles.highlight}>Best Brands</span>
+          <Trans i18nKey="section_title" components={{ 1: <span className={styles.highlight} /> }} />
         </h2>
         <p className={styles.sectionSubtitle}>
-          Select your preferred brand and explore our exquisite collection.
+          {t('section_subtitle')}
         </p>
-        <div 
-          className={styles.brandsGrid}
-          
-          style={{ 
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '20px',
-            justifyItems: 'center',
-            alignItems: 'center'
-          }}
-        >
-          {data.findAllBrands.map((brand) => (
-            <div
-              key={brand.id}
-              className={styles.brandLogoContainer}
-              onClick={() => navigate(`/brand/${brand.id}`)}
-            >
-              <img 
-                src={brand.image} 
-                alt={`${brand.name} logo`}
-                className={styles.brandLogo} 
-                
-                style={{ width: '100px', height: '100px', objectFit: 'contain' }}
-              />
-            </div>
-          ))}
-        </div>
+         <div className={styles.brandsGrid}>
+           {data.findAllBrands.map((brand) => (
+             <div
+               key={brand.id}
+               className={styles.brandLogoContainer}
+               onClick={() => navigate(`/brand/${brand.id}`)}
+             >
+               <img 
+                 src={brand.image} 
+                 alt={`${brand.name} logo`}
+                 className={styles.brandLogo}
+               />
+               <span className={styles.brandName}>{brand.name}</span>
+             </div>
+           ))}
+         </div>
       </div>
 
     
       <div className={styles.servicesSection}>
         <h2 className={styles.servicesTitle}>
-          Why try <span className={styles.highlight}>VibeStrings?</span>
+          <Trans i18nKey="why_try_title" components={{ 1: <span className={styles.highlight} /> }} />
         </h2>
         <div className={styles.servicesGrid}>
           <div className={styles.serviceItem}>
             <div className={styles.serviceIcon}>
               <i className="fa fa-braille"></i>
             </div>
-            <h3>SMOOTH BROWSING</h3>
+            <h3>{t('service_smooth_browsing')}</h3>
             <p>
-              Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.
+              {t('service_placeholder')}
             </p>
           </div>
           <div className={styles.serviceItem}>
             <div className={styles.serviceIcon}>
               <i className="fa fa-shipping-fast"></i>
             </div>
-            <h3>EASY DELIVERY</h3>
+            <h3>{t('service_easy_delivery')}</h3>
             <p>
-              Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.
+              {t('service_placeholder')}
             </p>
           </div>
           <div className={styles.serviceItem}>
             <div className={styles.serviceIcon}>
               <i className="fa fa-wallet"></i>
             </div>
-            <h3>SWIFT PAYMENTS</h3>
+            <h3>{t('service_swift_payments')}</h3>
             <p>
-              Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.
+              {t('service_placeholder')}
             </p>
           </div>
         </div>
@@ -114,8 +113,7 @@ export default function BrandsPage() {
       <div className={styles.mobileAppSection}>
         <div className={styles.mobileAppContent}>
           <h2>
-            Browse and buy your <br /> 
-            <span className={styles.highlight}>favorite guitars</span> with VibeStrings.
+            <Trans i18nKey="mobile_app_title" components={{ 1: <span className={styles.highlight} />, br: <br /> }} />
           </h2>
           
           <div style={{ display: "flex", gap: "12px", marginTop: "35px" , marginLeft:'100px'}}>
@@ -139,8 +137,7 @@ export default function BrandsPage() {
                 style={{ height: "28px", marginRight: "15px" }}
               />
               <div style={{ display: "flex", flexDirection: "column", lineHeight: "1.1", textAlign: "left" }}>
-                <span style={{ fontSize: "10px" }}>GET IT ON</span>
-                <span style={{ fontSize: "15px", fontWeight: "bold" }}>Google Play</span>
+                <Trans i18nKey="download_google" components={{ br: <br /> }} />
               </div>
             </button>
 
@@ -166,8 +163,7 @@ export default function BrandsPage() {
                 style={{ height: "24px", marginRight: "15px" }}
               />
               <div style={{ display: "flex", flexDirection: "column", lineHeight: "1.1", textAlign: "left" }}>
-                <span style={{ fontSize: "10px" }}>Download on the</span>
-                <span style={{ fontSize: "15px", fontWeight: "bold" }}>App Store</span>
+                <Trans i18nKey="download_apple" components={{ br: <br /> }} />
               </div>
             </button>
           </div>
@@ -180,7 +176,7 @@ export default function BrandsPage() {
       </div>
 
       {/* Footer */}
-      <footer className={styles.footer}>
+      <footer className={styles.footer} key={`footer-${i18n.language}`}>
         <div className={styles.footerContainer}>
           <div className={styles.footerInfo}>
             <div className={styles.footerLogo}>
@@ -188,29 +184,29 @@ export default function BrandsPage() {
               <span style={{fontWeight:'300' , marginLeft:'-10px' , color:'#121212'}}>VibeStrings</span>
             </div>
             <div className={styles.contactInfo}>
-              <p><i className="fa fa-envelope"></i> Enquiry@VibeStrings.com</p>
-              <p><i className="fa fa-map-marker"></i> San Francisco</p>
+              <p><i className="fa fa-envelope"></i> {t('email')}</p>
+              <p><i className="fa fa-map-marker"></i> {t('location')}</p>
             </div>
           </div>
           <div className={styles.footerLinks}>
             <div className={styles.footerColumn}>
-              <h4>PAGES</h4>
+              <h4>{t('pages')}</h4>
               <ul>
-                <li><a href="#">Store</a></li>
-                <li><a href="#">Collections</a></li>
-                <li><a href="#">Support</a></li>
+                <li><a href="#">{t('store')}</a></li>
+                <li><a href="#">{t('collections')}</a></li>
+                <li><a href="#">{t('support')}</a></li>
               </ul>
             </div>
             <div className={styles.footerColumn}>
-              <h4>PRODUCT</h4>
+              <h4>{t('product')}</h4>
               <ul>
-                <li><a href="#">Terms</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Copyright</a></li>
+                <li><a href="#">{t('terms')}</a></li>
+                <li><a href="#">{t('privacy_policy')}</a></li>
+                <li><a href="#">{t('copyright')}</a></li>
               </ul>
             </div>
             <div className={styles.footerColumn}>
-              <h4>FOLLOW US</h4>
+              <h4>{t('follow_us')}</h4>
               <div className={styles.socialIcons}>
                 <img style={{marginLeft:'-40px' , marginRight:'20px'}} src={logos}></img>
               </div>
@@ -218,7 +214,7 @@ export default function BrandsPage() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          <p>© 2022 Copyright.VibeStrings</p>
+          <p>{t('copyright_text')}</p>
         </div>
       </footer>
     </div>
